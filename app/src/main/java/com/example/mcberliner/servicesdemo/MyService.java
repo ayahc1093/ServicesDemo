@@ -3,6 +3,7 @@ package com.example.mcberliner.servicesdemo;
 import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,15 +21,26 @@ public class MyService extends Service {
     private static final int UPDATE_INTERVAL = 1000;
     private Timer timer = new Timer();
 
+    URL[] urls;
+    private final IBinder binder = new MyBinder();
+
+    public class MyBinder extends Binder {
+        MyService getService() {
+            return MyService.this;
+        }
+    }
+
     @Override
     public IBinder onBind(Intent arg0) {
-        return null;
+        return binder;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        doRepeatedly();
+        //doRepeatedly();
+
+        new DownloadTask().execute(urls);
         return START_STICKY;
     }
 
