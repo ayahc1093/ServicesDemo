@@ -21,6 +21,9 @@ public class MyIntentService extends IntentService {
         try {
             downloadFile(new URL("http://www.example.com/downloads/somefile.pdf"));
             Log.d("MyIntentService", "Download completed");
+
+            Intent broadcaseIntent = new Intent("FILE_DOWNLOAD_ACTION");
+            getBaseContext().sendBroadcast(broadcaseIntent);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
