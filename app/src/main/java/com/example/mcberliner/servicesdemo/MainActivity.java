@@ -17,8 +17,9 @@ public class MainActivity extends Activity {
     }
 
     public void startService(View v) {
-        Intent intent = new Intent(this, MyService.class);
-        startService(intent);
+        //Intent intent = new Intent(this, MyService.class);
+        //startService(intent);
+        startService(new Intent(getBaseContext(), MyIntentService.class));
     }
 
     public void stopService(View v) {
