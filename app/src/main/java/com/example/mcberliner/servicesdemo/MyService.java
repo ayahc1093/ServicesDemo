@@ -7,13 +7,18 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by mcberliner on 7/9/2015.
  */
 public class MyService extends Service {
+
+    private int counter;
+    private static final int UPDATE_INTERVAL = 1000;
+    private Timer timer = new Timer();
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -23,18 +28,29 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        try {
-            new DownloadTask().execute(new URL("http://www.example.com/downloads/file.pdf"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
+        doRepeatedly();
         return START_STICKY;
+    }
+
+    private void doRepeatedly() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                Log.d("Timer Task", "Counter: " + counter);
+                counter++;
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, UPDATE_INTERVAL);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        if (timer != null) {
+            timer.cancel();
+        }
+
         Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
     }
 
